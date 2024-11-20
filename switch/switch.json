@@ -1,0 +1,11 @@
+{
+    "mainClass": "com.thelogicmaster.switchgdx.SwitchLauncher",
+    "reflective": [
+        "com.badlogic.gdx.utils.*Array",
+        "com.badlogic.gdx.utils.*Set",
+        "com.badlogic.gdx.utils.*Map",
+
+        "mindustry.**"
+    ],
+    "platformOverride": true
+}

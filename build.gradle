@@ -247,6 +247,19 @@ project(":desktop"){
     }
 }
 
+project(":switch"){
+    apply plugin: "java"
+    dependencies {
+        implementation project(":core")
+
+        if(debugged()) implementation project(":debug")
+
+        implementation arcModule("backends:backend-switchgdx")
+
+        annotationProcessor 'com.github.Anuken:jabel:0.9.0'
+    }
+}
+
 project(":core"){
     apply plugin: "java-library"
     apply plugin: "kotlin"
@@ -321,7 +334,7 @@ project(":core"){
         api arcModule("extensions:freetype")
         api arcModule("extensions:g3d")
         api arcModule("extensions:fx")
-        api arcModule("extensions:arcnet")
+//        api arcModule("extensions:arcnet")
         implementation arcModule("extensions:filedialogs")
         api "com.github.Anuken:rhino:$rhinoVersion"
         if(localArc && debugged()) api arcModule("extensions:recorder")

@@ -13,7 +13,7 @@ import mindustry.net.*;
 import mindustry.net.Net.*;
 import mindustry.type.*;
 import mindustry.ui.dialogs.*;
-import rhino.*;
+//import rhino.*;
 
 import java.io.*;
 import java.net.*;
@@ -23,29 +23,29 @@ import static mindustry.Vars.*;
 public interface Platform{
 
     /** Dynamically creates a class loader for a jar file. This loader must be child-first. */
-    default ClassLoader loadJar(Fi jar, ClassLoader parent) throws Exception{
-        return new URLClassLoader(new URL[]{jar.file().toURI().toURL()}, parent){
-            @Override
-            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException{
-                //check for loaded state
-                Class<?> loadedClass = findLoadedClass(name);
-                if(loadedClass == null){
-                    try{
-                        //try to load own class first
-                        loadedClass = findClass(name);
-                    }catch(ClassNotFoundException e){
-                        //use parent if not found
-                        return parent.loadClass(name);
-                    }
-                }
-
-                if(resolve){
-                    resolveClass(loadedClass);
-                }
-                return loadedClass;
-            }
-        };
-    }
+//    default ClassLoader loadJar(Fi jar, ClassLoader parent) throws Exception{
+//        return new URLClassLoader(new URL[]{jar.file().toURI().toURL()}, parent){
+//            @Override
+//            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException{
+//                //check for loaded state
+//                Class<?> loadedClass = findLoadedClass(name);
+//                if(loadedClass == null){
+//                    try{
+//                        //try to load own class first
+//                        loadedClass = findClass(name);
+//                    }catch(ClassNotFoundException e){
+//                        //use parent if not found
+//                        return parent.loadClass(name);
+//                    }
+//                }
+//
+//                if(resolve){
+//                    resolveClass(loadedClass);
+//                }
+//                return loadedClass;
+//            }
+//        };
+//    }
 
     /** Steam: Update lobby visibility.*/
     default void updateLobby(){}
@@ -80,12 +80,12 @@ public interface Platform{
         return new Scripts();
     }
 
-    default Context getScriptContext(){
-        Context context = Context.getCurrentContext();
-        if(context == null) context = Context.enter();
-        context.setOptimizationLevel(9);
-        return context;
-    }
+//    default Context getScriptContext(){
+//        Context context = Context.getCurrentContext();
+//        if(context == null) context = Context.enter();
+//        context.setOptimizationLevel(9);
+//        return context;
+//    }
 
     /** Update discord RPC. */
     default void updateRPC(){

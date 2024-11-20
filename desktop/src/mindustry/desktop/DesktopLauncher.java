@@ -105,8 +105,8 @@ public class DesktopLauncher extends ClientLauncher{
                     loadError = true;
                     Log.err("Steam client not running.");
                 }else{
-                    initSteam(args);
-                    Vars.steam = true;
+//                    initSteam(args);
+//                    Vars.steam = true;
                 }
 
                 if(SteamAPI.restartAppIfNecessary(SVars.steamID)){

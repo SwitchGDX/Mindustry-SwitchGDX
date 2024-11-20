@@ -28,7 +28,7 @@ public class SNet implements SteamNetworkingCallback, SteamMatchmakingCallback, 
 
     final NetProvider provider;
 
-    final PacketSerializer serializer = new PacketSerializer();
+//    final PacketSerializer serializer = new PacketSerializer();
     final ByteBuffer writeBuffer = ByteBuffer.allocateDirect(16384);
     final ByteBuffer readBuffer = ByteBuffer.allocateDirect(16384);
     final ByteBuffer readCopyBuffer = ByteBuffer.allocate(writeBuffer.capacity());
@@ -50,58 +50,58 @@ public class SNet implements SteamNetworkingCallback, SteamMatchmakingCallback, 
 
             @Override
             public void update(){
-                while((length = snet.isP2PPacketAvailable(0)) != 0){
-                    try{
-                        readBuffer.position(0).limit(readBuffer.capacity());
-                        //lz4 chokes on direct buffers, so copy the bytes over
-                        int len = snet.readP2PPacket(from, readBuffer, 0);
-                        readBuffer.limit(len);
-                        readCopyBuffer.position(0);
-                        readCopyBuffer.put(readBuffer);
-                        readCopyBuffer.position(0);
-                        int fromID = from.getAccountID();
-                        Object output = serializer.read(readCopyBuffer);
-
-                        //it may be theoretically possible for this to be a framework message, if the packet is malicious or corrupted
-                        if(!(output instanceof Packet)) return;
-
-                        Packet pack = (Packet)output;
-
-                        if(net.server()){
-                            SteamConnection con = steamConnections.get(fromID);
-                            try{
-                                //accept users on request
-                                if(con == null){
-                                    con = new SteamConnection(SteamID.createFromNativeHandle(from.handle()));
-                                    Connect c = new Connect();
-                                    c.addressTCP = "steam:" + from.getAccountID();
-
-                                    Log.info("&bReceived STEAM connection: @", c.addressTCP);
-
-                                    steamConnections.put(from.getAccountID(), con);
-                                    connections.add(con);
-                                    net.handleServerReceived(con, c);
-                                }
-
-                                net.handleServerReceived(con, pack);
-                            }catch(Throwable e){
-                                Log.err(e);
-                            }
-                        }else if(currentServer != null && fromID == currentServer.getAccountID()){
-                            try{
-                                net.handleClientReceived(pack);
-                            }catch(Throwable t){
-                                net.handleException(t);
-                            }
-                        }
-                    }catch(Exception e){
-                        if(net.server()){
-                            Log.err(e);
-                        }else{
-                            net.showError(e);
-                        }
-                    }
-                }
+//                while((length = snet.isP2PPacketAvailable(0)) != 0){
+//                    try{
+//                        readBuffer.position(0).limit(readBuffer.capacity());
+//                        //lz4 chokes on direct buffers, so copy the bytes over
+//                        int len = snet.readP2PPacket(from, readBuffer, 0);
+//                        readBuffer.limit(len);
+//                        readCopyBuffer.position(0);
+//                        readCopyBuffer.put(readBuffer);
+//                        readCopyBuffer.position(0);
+//                        int fromID = from.getAccountID();
+//                        Object output = serializer.read(readCopyBuffer);
+//
+//                        //it may be theoretically possible for this to be a framework message, if the packet is malicious or corrupted
+//                        if(!(output instanceof Packet)) return;
+//
+//                        Packet pack = (Packet)output;
+//
+//                        if(net.server()){
+//                            SteamConnection con = steamConnections.get(fromID);
+//                            try{
+//                                //accept users on request
+//                                if(con == null){
+//                                    con = new SteamConnection(SteamID.createFromNativeHandle(from.handle()));
+//                                    Connect c = new Connect();
+//                                    c.addressTCP = "steam:" + from.getAccountID();
+//
+//                                    Log.info("&bReceived STEAM connection: @", c.addressTCP);
+//
+//                                    steamConnections.put(from.getAccountID(), con);
+//                                    connections.add(con);
+//                                    net.handleServerReceived(con, c);
+//                                }
+//
+//                                net.handleServerReceived(con, pack);
+//                            }catch(Throwable e){
+//                                Log.err(e);
+//                            }
+//                        }else if(currentServer != null && fromID == currentServer.getAccountID()){
+//                            try{
+//                                net.handleClientReceived(pack);
+//                            }catch(Throwable t){
+//                                net.handleException(t);
+//                            }
+//                        }
+//                    }catch(Exception e){
+//                        if(net.server()){
+//                            Log.err(e);
+//                        }else{
+//                            net.showError(e);
+//                        }
+//                    }
+//                }
             }
         }));
 
@@ -134,26 +134,26 @@ public class SNet implements SteamNetworkingCallback, SteamMatchmakingCallback, 
 
     @Override
     public void sendClient(Object object, boolean reliable){
-        if(isSteamClient()){
-            if(currentServer == null){
-                Log.info("Not connected, quitting.");
-                return;
-            }
-
-            try{
-                writeBuffer.limit(writeBuffer.capacity());
-                writeBuffer.position(0);
-                serializer.write(writeBuffer, object);
-                int length = writeBuffer.position();
-                writeBuffer.flip();
-
-                snet.sendP2PPacket(currentServer, writeBuffer, reliable || length >= 1000 ? P2PSend.Reliable : P2PSend.UnreliableNoDelay, 0);
-            }catch(Exception e){
-                net.showError(e);
-            }
-        }else{
-            provider.sendClient(object, reliable);
-        }
+//        if(isSteamClient()){
+//            if(currentServer == null){
+//                Log.info("Not connected, quitting.");
+//                return;
+//            }
+//
+//            try{
+//                writeBuffer.limit(writeBuffer.capacity());
+//                writeBuffer.position(0);
+//                serializer.write(writeBuffer, object);
+//                int length = writeBuffer.position();
+//                writeBuffer.flip();
+//
+//                snet.sendP2PPacket(currentServer, writeBuffer, reliable || length >= 1000 ? P2PSend.Reliable : P2PSend.UnreliableNoDelay, 0);
+//            }catch(Exception e){
+//                net.showError(e);
+//            }
+//        }else{
+//            provider.sendClient(object, reliable);
+//        }
     }
 
     @Override
@@ -427,22 +427,22 @@ public class SNet implements SteamNetworkingCallback, SteamMatchmakingCallback, 
 
         @Override
         public void send(Object object, boolean reliable){
-            try{
-                writeBuffer.limit(writeBuffer.capacity());
-                writeBuffer.position(0);
-                serializer.write(writeBuffer, object);
-                int length = writeBuffer.position();
-                writeBuffer.flip();
-
-                snet.sendP2PPacket(sid, writeBuffer, reliable || length >= 1000 ? object instanceof StreamChunk ? P2PSend.ReliableWithBuffering : P2PSend.Reliable : P2PSend.UnreliableNoDelay, 0);
-            }catch(Exception e){
-                Log.err(e);
-                Log.info("Error sending packet. Disconnecting invalid client!");
-                close();
-
-                SteamConnection k = steamConnections.get(sid.getAccountID());
-                if(k != null) steamConnections.remove(sid.getAccountID());
-            }
+//            try{
+//                writeBuffer.limit(writeBuffer.capacity());
+//                writeBuffer.position(0);
+//                serializer.write(writeBuffer, object);
+//                int length = writeBuffer.position();
+//                writeBuffer.flip();
+//
+//                snet.sendP2PPacket(sid, writeBuffer, reliable || length >= 1000 ? object instanceof StreamChunk ? P2PSend.ReliableWithBuffering : P2PSend.Reliable : P2PSend.UnreliableNoDelay, 0);
+//            }catch(Exception e){
+//                Log.err(e);
+//                Log.info("Error sending packet. Disconnecting invalid client!");
+//                close();
+//
+//                SteamConnection k = steamConnections.get(sid.getAccountID());
+//                if(k != null) steamConnections.remove(sid.getAccountID());
+//            }
         }
 
         @Override

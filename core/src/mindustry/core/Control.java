@@ -328,7 +328,7 @@ public class Control implements ApplicationListener, Loadable{
 
         player.color.set(Core.settings.getInt("color-0"));
 
-        if(mobile){
+        if(mobile || true){
             input = new MobileInput();
         }else{
             input = new DesktopInput();

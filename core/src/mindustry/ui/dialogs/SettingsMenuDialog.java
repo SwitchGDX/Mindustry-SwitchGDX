@@ -154,25 +154,25 @@ public class SettingsMenuDialog extends BaseDialog{
             t.row();
 
             t.button("@data.export", Icon.upload, style, () -> {
-                if(ios){
-                    Fi file = Core.files.local("mindustry-data-export.zip");
-                    try{
-                        exportData(file);
-                    }catch(Exception e){
-                        ui.showException(e);
-                    }
-                    platform.shareFile(file);
-                }else{
-                    platform.showFileChooser(false, "zip", file -> {
-                        try{
-                            exportData(file);
-                            ui.showInfo("@data.exported");
-                        }catch(Exception e){
-                            e.printStackTrace();
-                            ui.showException(e);
-                        }
-                    });
-                }
+//                if(ios){
+//                    Fi file = Core.files.local("mindustry-data-export.zip");
+//                    try{
+//                        exportData(file);
+//                    }catch(Exception e){
+//                        ui.showException(e);
+//                    }
+//                    platform.shareFile(file);
+//                }else{
+//                    platform.showFileChooser(false, "zip", file -> {
+//                        try{
+//                            exportData(file);
+//                            ui.showInfo("@data.exported");
+//                        }catch(Exception e){
+//                            e.printStackTrace();
+//                            ui.showException(e);
+//                        }
+//                    });
+//                }
             }).marginLeft(4);
 
             t.row();

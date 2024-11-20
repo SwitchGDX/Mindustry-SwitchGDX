@@ -1004,22 +1004,24 @@ public class Mods implements Loadable{
                     throw new ModLoadException("Java class mods are not supported on iOS.");
                 }
 
-                loader = platform.loadJar(sourceFile, mainLoader);
-                mainLoader.addChild(loader);
-                Class<?> main = Class.forName(mainClass, true, loader);
+                throw new ModLoadException("Java class mods are not supported.");
 
-                //detect mods that incorrectly package mindustry in the jar
-                if((main.getSuperclass().getName().equals("mindustry.mod.Plugin") || main.getSuperclass().getName().equals("mindustry.mod.Mod")) &&
-                    main.getSuperclass().getClassLoader() != Mod.class.getClassLoader()){
-                    throw new ModLoadException(
-                        "This mod/plugin has loaded Mindustry dependencies from its own class loader. " +
-                        "You are incorrectly including Mindustry dependencies in the mod JAR - " +
-                        "make sure Mindustry is declared as `compileOnly` in Gradle, and that the JAR is created with `runtimeClasspath`!"
-                    );
-                }
-
-                metas.put(main, meta);
-                mainMod = (Mod)main.getDeclaredConstructor().newInstance();
+//                loader = platform.loadJar(sourceFile, mainLoader);
+//                mainLoader.addChild(loader);
+//                Class<?> main = Class.forName(mainClass, true, loader);
+//
+//                //detect mods that incorrectly package mindustry in the jar
+//                if((main.getSuperclass().getName().equals("mindustry.mod.Plugin") || main.getSuperclass().getName().equals("mindustry.mod.Mod")) &&
+//                    main.getSuperclass().getClassLoader() != Mod.class.getClassLoader()){
+//                    throw new ModLoadException(
+//                        "This mod/plugin has loaded Mindustry dependencies from its own class loader. " +
+//                        "You are incorrectly including Mindustry dependencies in the mod JAR - " +
+//                        "make sure Mindustry is declared as `compileOnly` in Gradle, and that the JAR is created with `runtimeClasspath`!"
+//                    );
+//                }
+//
+//                metas.put(main, meta);
+//                mainMod = (Mod)main.getDeclaredConstructor().newInstance();
             }else{
                 mainMod = null;
             }

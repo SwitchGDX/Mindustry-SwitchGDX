@@ -19,8 +19,9 @@ task run(dependsOn: classes, type: JavaExec){
         jvmArgs("-XstartOnFirstThread")
     }
 
-    jvmArgs += "-XX:+ShowCodeDetailsInExceptionMessages"
 
+    jvmArgs += "-XX:+ShowCodeDetailsInExceptionMessages"
+    jvmArgs += "--add-opens=java.base/java.io=ALL-UNNAMED" // Todo: REMOVE
     if(project.hasProperty("args")){
         args Eval.me(project.getProperties()["args"])
     }
