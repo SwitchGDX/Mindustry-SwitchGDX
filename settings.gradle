@@ -25,9 +25,9 @@ if(hasSdk){
 }
 
 if(!hasProperty("release") && !hasProperty("noLocalArc")){
-    if(new File(rootDir.parent, 'Arc').exists()){
+    if(new File(rootDir.parent, 'Arc-SwitchGDX').exists()){
         println("Compiling with localArc")
-        includeBuild("../Arc")
+        includeBuild("../Arc-SwitchGDX")
     }
 
     if(new File(rootDir.parent, 'Mindustry-Debug').exists()){

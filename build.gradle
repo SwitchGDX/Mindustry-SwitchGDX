@@ -2,7 +2,7 @@ buildscript{
     ext{
         arcHash = property("archash")
 
-        localArc = !project.hasProperty("release") && new File(rootDir.parent, 'Arc').exists() && !project.hasProperty("noLocalArc")
+        localArc = !project.hasProperty("release") && new File(rootDir.parent, 'Arc-SwitchGDX').exists() && !project.hasProperty("noLocalArc")
 
         arcModule = { String name ->
             //skip to last submodule

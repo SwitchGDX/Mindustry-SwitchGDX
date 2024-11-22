@@ -177,7 +177,7 @@ void SM_arc_backend_switchgdx_SwitchApplication_init_boolean(jcontext ctx, jbool
 #if defined(__WIN32__) || defined(__WINRT__)
     WSADATA wsa_data;
     if (WSAStartup(MAKEWORD(2, 2), &wsa_data))
-        vm::throwNew<java::io::IOException>();
+        throwIOException(ctx, "WSAStartup exception");
 #endif
 
 #ifdef __SWITCH__
