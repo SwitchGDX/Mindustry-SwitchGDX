@@ -6,6 +6,12 @@ set(CMAKE_SYSTEM_NAME "Generic")
 set(CMAKE_SYSTEM_VERSION "DKA-NX-14")
 set(CMAKE_SYSTEM_PROCESSOR "aarch64")
 
+SET(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+SET(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+SET(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
+SET(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
+SET(CMAKE_NINJA_FORCE_RESPONSE_FILE 1 CACHE INTERNAL "")
+
 # If you're doing multiplatform builds, use this variable to check
 # whether you're building for the Switch.
 # A macro of the same name is defined as well, to be used within code.

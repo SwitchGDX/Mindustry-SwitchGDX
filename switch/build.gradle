@@ -113,7 +113,7 @@ task run(dependsOn: transpile) {
         exec {
             if (DefaultNativePlatform.currentOperatingSystem.isWindows())
                 commandLine 'C:\\msys64\\msys2_shell.cmd', '-mingw64', '-where', "$buildDir${File.separator}${rootProject.name}", '-c',
-                        'cmake -DCMAKE_BUILD_TYPE=Debug -S . -B cmake-build-run && cmake --build cmake-build-run -j8 || sleep 50000'
+                        'cmake -DCMAKE_BUILD_TYPE=Debug -S . -B cmake-build-run -G \'MinGW Makefiles\' && cmake --build cmake-build-run -j8 || sleep 50000'
             else
                 commandLine 'bash', '-c', 'cmake -DCMAKE_BUILD_TYPE=Debug -S . -B cmake-build-run -G Ninja && cmake --build cmake-build-run -j8'
             workingDir "$buildDir${File.separator}${rootProject.name}"
