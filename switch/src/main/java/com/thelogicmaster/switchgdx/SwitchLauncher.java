@@ -1,21 +1,21 @@
 package com.thelogicmaster.switchgdx;
 
-import arc.Files;
 import arc.backend.switchgdx.SwitchApplication;
+import arc.files.Fi;
 import arc.util.Log;
 import mindustry.ClientLauncher;
 import mindustry.Vars;
-import mindustry.core.Version;
 
 public class SwitchLauncher extends ClientLauncher {
+
+	@Override
+	public ClassLoader loadJar(Fi jar, ClassLoader parent) throws Exception {
+		return parent;
+	}
 
 	public static void main (String[] arg) {
 		Log.level = Log.LogLevel.debug;
 		Vars.loadLogger();
-		new SwitchApplication(new SwitchLauncher(arg), new SwitchApplication.Config());
-	}
-
-	public SwitchLauncher(String[] args) {
-//		Version.init();
+		new SwitchApplication(new SwitchLauncher(), new SwitchApplication.Config());
 	}
 }

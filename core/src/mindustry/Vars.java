@@ -181,6 +181,8 @@ public class Vars implements Loadable{
     /** whether the game is running on an Android device */
     public static boolean android;
     /** whether the game is running on a headless server */
+    public static boolean switchGdx;
+    /** whether the game is running on a headless server */
     public static boolean headless;
     /** whether steam is enabled for this game */
     public static boolean steam;
@@ -339,6 +341,7 @@ public class Vars implements Loadable{
         mobile = Core.app.isMobile() || testMobile;
         ios = Core.app.isIOS();
         android = Core.app.isAndroid();
+        switchGdx = Core.app.isSwitchGdx();
 
         modDirectory.mkdirs();
 

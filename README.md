@@ -16,7 +16,7 @@ The primary target is a Nintendo Switch Homebrew application.
 
 ### Issues
 - Performance
-- FreeType memory bug
+- Un-extracted mods have loading errors (Something with ZipFile extraction or string encoding)
 
 ### Windows
 - Install MSYS2

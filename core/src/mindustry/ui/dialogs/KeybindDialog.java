@@ -205,7 +205,7 @@ public class KeybindDialog extends Dialog{
             rebindDialog.addListener(new InputListener(){
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button){
-                    if(Core.app.isAndroid()) return false;
+                    if(Core.app.isAndroid() || app.isSwitchGdx()) return false;
                     rebind(section, name, button);
                     return false;
                 }

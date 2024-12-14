@@ -14,11 +14,11 @@
 #include <arc/backend/switchgdx/SwitchGraphics.h>
 #include <arc/backend/switchgdx/SwitchGL.h>
 #include <arc/backend/switchgdx/SwitchInput.h>
-// #include <arc/backend/switchgdx/SwitchControllerManager.h>
 #include <arc/backend/switchgdx/SwitchFiles.h>
 #include <arc/util/ArcRuntimeException.h>
 #include <arc/util/Buffers.h>
 #include <arc/graphics/Pixmap.h>
+#include <arc/Input_TextInput.h>
 
 #include <fcntl.h>
 #include <csignal>
@@ -29,13 +29,16 @@
 #include <curl/curl.h>
 #include <chrono>
 #include <SDL.h>
-#include "switchgdx/SDL_mixer.h"
 #include <SDL_gamecontroller.h>
 #include "SDL_messagebox.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
 #define STBI_NO_STDIO
+
+#include <arc/func/Cons.h>
+#include <java/lang/Runnable.h>
+
 #include "stb_image.h"
 
 #if !defined(__WIN32__) && !defined(__WINRT__)
@@ -247,11 +250,7 @@ void SM_arc_backend_switchgdx_SwitchApplication_init_boolean(jcontext ctx, jbool
 
     gladLoadGLES2((GLADloadfunc) SDL_GL_GetProcAddress);
 #endif
-
-    Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG);
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
-    Mix_AllocateChannels(32);
-
+    
     curl_global_init(CURL_GLOBAL_ALL);
 }
 
@@ -270,7 +269,6 @@ void SM_arc_backend_switchgdx_SwitchApplication_dispose0(jcontext ctx) {
         eglTerminate(display);
     }
 
-    Mix_Quit();
     SDL_Quit();
 
     romfsExit();
@@ -473,7 +471,7 @@ jbool SM_arc_backend_switchgdx_SwitchApplication_update_R_boolean(jcontext ctx) 
             if (i < touchState.count) {
                 touches[i * 3 + 0] = touchState.touches[i].finger_id;
                 touches[i * 3 + 1] = touchState.touches[i].x;
-                touches[i * 3 + 2] = touchState.touches[i].y;
+                touches[i * 3 + 2] = 720 - 1 - touchState.touches[i].y;
             } else {
                 touches[i * 3 + 0] = -1;
                 touches[i * 3 + 1] = 0;
@@ -555,6 +553,23 @@ jobject M_arc_backend_switchgdx_SwitchFiles_getLocalStoragePath_R_java_lang_Stri
 #endif
 }
 
+jbool M_arc_backend_switchgdx_SwitchApplication_openURI_java_lang_String_R_boolean(jcontext ctx, jobject self, jobject urlObj) {
+#ifdef __SWITCH__
+    WebCommonConfig config;
+    WebCommonReply reply;
+    return !webPageCreate(&config, stringToNative(ctx, (jstring)urlObj)) and !webConfigSetWhitelist(&config, "^http*") and !webConfigShow(&config, &reply);
+#else
+    std::string url(stringToNative(ctx, (jstring) urlObj));
+# if defined(__WIN32__) || defined(__WINRT__)
+    return !system(("start " + url).c_str());
+# elif __APPLE__
+    return !system(("open " + url).c_str());
+# else
+    return !system(("xdg-open " + url).c_str());
+# endif
+#endif
+}
+
 jobject SM_arc_filedialogs_FileDialogs_saveFileDialog_java_lang_String_java_lang_String_Array1_java_lang_String_java_lang_String_R_java_lang_String(jcontext ctx, jobject param0, jobject param1, jobject param2, jobject param3) {
     return nullptr; // Todo
 }
@@ -623,7 +638,7 @@ jobject SM_arc_graphics_Pixmap_loadJni_Array1_long_Array1_byte_int_int_R_java_ni
 }
 
 jobject SM_arc_graphics_Pixmap_createJni_Array1_long_int_int_R_java_nio_ByteBuffer(jcontext ctx, jobject nativeData, jint width, jint height) {
-    auto pixels = new char[width * height * 4];
+    auto pixels = new char[width * height * 4]{};
     auto pixelBuffer = gcAllocProtected(ctx, &class_java_nio_ByteBuffer);
     init_java_nio_ByteBuffer_long_int_boolean(ctx, pixelBuffer, (jlong) pixels, width * height * 4, false);
     unprotectObject(pixelBuffer);
@@ -664,7 +679,7 @@ jint M_arc_backend_switchgdx_SwitchGraphics_getHeight_R_int(jcontext ctx, jobjec
     return height;
 }
 
-jint SM_arc_backend_switchgdx_SwitchControllerManager_getButtons_int_R_int(jcontext ctx, jint controller) {
+jint SM_arc_backend_switchgdx_SwitchInput_getButtons_int_R_int(jcontext ctx, jint controller) {
 #ifdef __SWITCH__
     auto &pad = controller == -1 ? combinedPad : pads[controller];
     return remapPadButtons(padGetButtons(&pad), padGetStyleSet(&pad));
@@ -673,7 +688,7 @@ jint SM_arc_backend_switchgdx_SwitchControllerManager_getButtons_int_R_int(jcont
 #endif
 }
 
-void SM_arc_backend_switchgdx_SwitchControllerManager_getAxes_int_Array1_float(jcontext ctx, jint controller, jobject axes) {
+void SM_arc_backend_switchgdx_SwitchInput_getAxes_int_Array1_float(jcontext ctx, jint controller, jobject axes) {
     auto array = (float *) ((jarray) axes)->data;
 #ifdef __SWITCH__
     const auto &pad = controller == -1 ? combinedPad : pads[controller];
@@ -692,7 +707,7 @@ void SM_arc_backend_switchgdx_SwitchControllerManager_getAxes_int_Array1_float(j
 #endif
 }
 
-jbool SM_arc_backend_switchgdx_SwitchControllerManager_isConnected_int_R_boolean(jcontext ctx, jint controller) {
+jbool SM_arc_backend_switchgdx_SwitchInput_isConnected_int_R_boolean(jcontext ctx, jint controller) {
 #ifdef __SWITCH__
     return pads[controller].active_handheld or pads[controller].active_id_mask;
 #else
@@ -700,7 +715,7 @@ jbool SM_arc_backend_switchgdx_SwitchControllerManager_isConnected_int_R_boolean
 #endif
 }
 
-void SM_arc_backend_switchgdx_SwitchControllerManager_remapControllers_int_int_boolean_boolean(jcontext ctx, jint min, jint max, jbool dualJoy, jbool singleMode) {
+void SM_arc_backend_switchgdx_SwitchInput_remapControllers_int_int_boolean_boolean(jcontext ctx, jint min, jint max, jbool dualJoy, jbool singleMode) {
 #ifdef __SWITCH__
     HidLaControllerSupportArg arg;
     hidLaCreateControllerSupportArg(&arg);
@@ -716,46 +731,45 @@ void SM_arc_backend_switchgdx_SwitchInput_getTouchData_Array1_int(jcontext ctx, 
     memcpy((void *) ((jarray) touchData)->data, touches, sizeof(touches));
 }
 
-void M_arc_backend_switchgdx_SwitchInput_getTextInput_arc_Input$TextInput(jcontext ctx, jobject self, jobject input) {
-    // Todo
+void M_arc_backend_switchgdx_SwitchInput_getTextInput_arc_Input$TextInput(jcontext ctx, jobject self, jobject inputObj) {
+    auto input = (arc_Input$TextInput *) inputObj;
+    auto title = stringToNative(ctx, (jstring)input->F_title);
+    auto message = stringToNative(ctx, (jstring)input->F_message);
+    auto text = stringToNative(ctx, (jstring)input->F_text);
+
+#ifdef __SWITCH__
+    Result rc;
+    SwkbdConfig kbd;
+    char result[256];
+    rc = swkbdCreate(&kbd, 0);
+    if (rc)
+        goto failed;
+    swkbdConfigMakePresetDefault(&kbd);
+    swkbdConfigSetHeaderText(&kbd, title);
+    swkbdConfigSetGuideText(&kbd, message);
+    swkbdConfigSetInitialText(&kbd, text);
+    swkbdConfigSetStringLenMax(&kbd, std::min(input->F_maxLength, (int)sizeof(result) - 1));
+    rc = swkbdShow(&kbd, result, sizeof(result));
+    if (rc)
+        goto failed;
+#elif defined(__WINRT__)
+    goto failed;
+#else
+    auto result = tinyfd_inputBox(title, message, text);
+    if (!result)
+        goto failed;
+#endif
+
+    if (input->F_allowEmpty or strlen(result) > 0) {
+        auto resultObj = (jobject) stringFromNativeProtected(ctx, result);
+        INVOKE_INTERFACE(arc_func_Cons, get_java_lang_Object, (jobject)input->F_accepted, resultObj);
+        unprotectObject(resultObj);
+        return;
+    }
+
+    failed:
+    INVOKE_INTERFACE(java_lang_Runnable, run, (jobject)input->F_canceled);
 }
-//
-// void M_arc_backend_switchgdx_SwitchInput_getTextInput_com_badlogic_gdx_Input$TextInputListener_java_lang_String_java_lang_String_java_lang_String_com_badlogic_gdx_Input$OnscreenKeyboardType
-//         (jcontext ctx, jobject self, jobject listener, jobject title, jobject text, jobject hint, jobject type) {
-// #ifdef __SWITCH__
-//     Result rc;
-//     SwkbdConfig kbd;
-//     char buffer[256];
-//     rc = swkbdCreate(&kbd, 0);
-//     if (rc)
-//         goto failed;
-//     swkbdConfigMakePresetDefault(&kbd);
-//     swkbdConfigSetHeaderText(&kbd, vm::getNativeString(title));
-//     swkbdConfigSetGuideText(&kbd, vm::getNativeString(text));
-//     swkbdConfigSetInitialText(&kbd, vm::getNativeString(hint));
-//     swkbdConfigSetStringLenMax(&kbd, sizeof(buffer) - 1);
-//     rc = swkbdShow(&kbd, buffer, sizeof(buffer));
-//     if (rc)
-//         goto failed;
-//     listener->M_input(vm::createString(buffer));
-//     return;
-// #elif defined(__WINRT__)
-//     goto failed;
-// #else
-//     auto input = tinyfd_inputBox(stringToNative(ctx, (jstring) title), stringToNative(ctx, (jstring) text), "");
-//     if (!input)
-//         goto failed;
-//     {
-//         auto textObj = (jobject) stringFromNative(ctx, input);
-//         textObj->gcMark = GC_MARK_NATIVE; // Todo: Should really just use a stack frame for parameters being passed around, this is error prone and leaky
-//         invokeInterface<func_com_badlogic_gdx_Input$TextInputListener_input_java_lang_String, &class_com_badlogic_gdx_Input$TextInputListener, INDEX_com_badlogic_gdx_Input$TextInputListener_input_java_lang_String>(ctx, listener, textObj);
-//         textObj->gcMark = GC_MARK_START;
-//         return;
-//     }
-// #endif
-//     failed:
-//     invokeInterface<func_com_badlogic_gdx_Input$TextInputListener_canceled, &class_com_badlogic_gdx_Input$TextInputListener, INDEX_com_badlogic_gdx_Input$TextInputListener_canceled>(ctx, listener);
-// }
 
 void M_arc_backend_switchgdx_SwitchGL_glActiveTexture_int(jcontext ctx, jobject self, jint texture) {
     glActiveTexture(texture);

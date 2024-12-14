@@ -26,7 +26,7 @@ public class Links{
         new LinkEntry("f-droid", "https://f-droid.org/packages/io.anuke.mindustry/", Icon.android, Color.valueOf("026aa7")),
         new LinkEntry("github", "https://github.com/Anuken/Mindustry/", Icon.github, Color.valueOf("24292e")),
         new LinkEntry("dev-builds", "https://github.com/Anuken/MindustryBuilds", Icon.githubSquare, Color.valueOf("fafbfc")),
-        new LinkEntry("bug", report(), Icon.wrench, Color.valueOf("cbd97f"))
+//        new LinkEntry("bug", report(), Icon.wrench, Color.valueOf("cbd97f"))
         };
     }
 

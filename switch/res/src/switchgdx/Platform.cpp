@@ -6,9 +6,10 @@
 
 const char *getOSLanguage() {
 #ifdef __SWITCH__
-    u64 languageCode;
-    setGetSystemLanguage(&languageCode);
-    return (char *)languageCode;
+    return "en-US";
+//    u64 languageCode;
+//    setGetSystemLanguage(&languageCode);
+//    return (char *)languageCode;
 #else
     return "en-US";
 #endif

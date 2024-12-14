@@ -150,7 +150,7 @@ task nro(dependsOn: transpile) {
             workingDir "$buildDir${File.separator}${rootProject.name}"
             environment 'APP_TITLE', appTitle
             environment 'APP_AUTHOR', appAuthor
-            environment 'APP_VERSION', version
+            environment 'APP_VERSION', buildversion
         }
     }
 }

@@ -29,7 +29,7 @@ void throwError(jcontext ctx, int result) {
 
 
 void SM_arc_audio_Soloud_init(jcontext ctx) {
-    int result = soloud.init();
+    int result = soloud.init(Soloud::CLIP_ROUNDOFF, Soloud::AUTO, Soloud::AUTO, 2048 * 4);
 
     if (result != 0) throwError(ctx, result);
 }

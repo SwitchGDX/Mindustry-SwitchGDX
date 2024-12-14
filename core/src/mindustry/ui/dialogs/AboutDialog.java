@@ -91,6 +91,8 @@ public class AboutDialog extends BaseDialog{
         dialog.addCloseButton();
         dialog.cont.add("@credits.text").fillX().wrap().get().setAlignment(Align.center);
         dialog.cont.row();
+        dialog.cont.add("@port.text").fillX().wrap().get().setAlignment(Align.center);
+        dialog.cont.row();
         if(!contributors.isEmpty()){
             dialog.cont.image().color(Pal.accent).fillX().height(3f).pad(3f);
             dialog.cont.row();
