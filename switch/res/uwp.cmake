@@ -9,7 +9,7 @@ include_directories(src src/soloud)
 add_executable(SwitchGDX WIN32 ${SRCS})
 
 target_compile_options(SwitchGDX PRIVATE "-await" "/Zc:preprocessor")
-target_compile_definitions(SwitchGDX PRIVATE UNICODE WITH_SDL2_STATIC NOJNI)
+target_compile_definitions(SwitchGDX PRIVATE UNICODE WITH_SDL2_STATIC NOJNI ASMJIT_NO_JIT)
 
 set(CMAKE_SYSTEM_NAME "WindowsStore" CACHE INTERNAL "" FORCE )
 

@@ -13,7 +13,7 @@ import mindustry.net.*;
 import mindustry.net.Net.*;
 import mindustry.type.*;
 import mindustry.ui.dialogs.*;
-//import rhino.*;
+import rhino.*;
 
 import java.io.*;
 import java.net.*;
@@ -80,12 +80,12 @@ public interface Platform{
         return new Scripts();
     }
 
-//    default Context getScriptContext(){
-//        Context context = Context.getCurrentContext();
-//        if(context == null) context = Context.enter();
-//        context.setOptimizationLevel(9);
-//        return context;
-//    }
+    default Context getScriptContext(){
+        Context context = Context.getCurrentContext();
+        if(context == null) context = Context.enter();
+        context.setOptimizationLevel(9);
+        return context;
+    }
 
     /** Update discord RPC. */
     default void updateRPC(){

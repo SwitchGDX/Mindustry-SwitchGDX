@@ -5,7 +5,8 @@
         "com.badlogic.gdx.utils.*Set",
         "com.badlogic.gdx.utils.*Map",
 
-        "mindustry.**"
+        "mindustry.**",
+        "rhino.**"
     ],
     "platformOverride": true
 }

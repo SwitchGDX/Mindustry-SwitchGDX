@@ -14,9 +14,18 @@ The [SwitchGDX](https://github.com/TheLogicMaster/switch-gdx) backend enables su
 target platforms by transpiling to C++ using [Clearwing VM](https://github.com/TheLogicMaster/clearwing-vm).
 The primary target is a Nintendo Switch Homebrew application.
 
-### Issues
-- Performance
-- Un-extracted mods have loading errors (Something with ZipFile extraction or string encoding)
+### Limitations
+- Performance is not amazing
+- No multiplayer/networking support
+- Poor mod support
+- No controller support
+
+### Mods
+- This port targets the development version of Mindustry, so mod compatibility is poor ([Asthosus](https://github.com/Catana791/Asthosus) is known working)
+- JavaScript mods currently have issues
+- Mods must be extracted into `mods` directory due to a runtime bug with ZipFile extraction or string encoding
+- Java mods must be extracted into `Mindustry/switch/mods` to be included in the built program (No JIT support)
+and have relevant class packages added to the `switch.json` `reflective` section to prevent classes being optimized out.
 
 ### Windows
 - Install MSYS2

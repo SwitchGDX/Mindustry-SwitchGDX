@@ -20,7 +20,8 @@ configurations {
 }
 
 dependencies {
-    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.0-dev"
+    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.0"
+//    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.0-dev"
 }
 
 task transpile(dependsOn: 'build') {
@@ -31,15 +32,22 @@ task transpile(dependsOn: 'build') {
         configurations.runtimeClasspath.asList().stream()
                 .filter(file -> !file.isDirectory())
                 .forEach(file -> libs.add(file.absolutePath))
-
+        
+        var mods = []
+        var modDirs = []
+        file("$projectDir/mods").eachDir {
+            mods.add(it.name)
+            modDirs.add(it.absolutePath) 
+        }
+        
         javaexec {
             main = "-jar"
-            args = ["$configurations.transpiler.singleFile.absolutePath", "--input"] + libs + [
+            args = ["$configurations.transpiler.singleFile.absolutePath", "--input"] + libs + modDirs + [
                     "$buildDir/classes",
                     "$rootDir/core/build/classes",
                     "--output", "$buildDir/dist",
                     "--source", "$projectDir/src/main/java", "$rootDir/core/src",
-                    "--config", "$projectDir/switch.json"
+                    "--config", "$projectDir/switch.json",
             ]
         }
 
@@ -66,6 +74,19 @@ task transpile(dependsOn: 'build') {
             }
             into "$buildDir/dist/romfs/classpath"
             includeEmptyDirs = false
+        }
+        
+        for (mod in mods) {
+            copy {
+                from("$projectDir/mods/$mod") {
+                    exclude "META-INF", "META-INF/**"
+                    exclude ".github", ".git", "CONTRIBUTING.md"
+                    exclude "**/*.class"
+                    exclude "classes.dex"
+                }
+                into "$buildDir/dist/romfs/mods/$mod"
+                includeEmptyDirs = false
+            }
         }
 
         copy {
