@@ -22,7 +22,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         APP_TITLE "$ENV{APP_TITLE}"
         APP_AUTHOR "$ENV{APP_AUTHOR}"
         APP_VERSION "$ENV{APP_VERSION}"
-        ROMFS "${CMAKE_SOURCE_DIR}/romfs")
+        ROMFS "${CMAKE_SOURCE_DIR}/romfs"
+        ICON "${CMAKE_SOURCE_DIR}/icon.jpg")
 
 target_include_directories(${PROJECT_NAME} PUBLIC include ${DEVKITPRO}/libnx/include ${PORTLIBS}/include ${PORTLIBS}/include/freetype2 ${PORTLIBS}/include/SDL2)
 target_link_libraries(${PROJECT_NAME} -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIC -ftls-model=local-exec -fPIE -L${DEVKITPRO}/libnx/lib -L${PORTLIBS}/lib
