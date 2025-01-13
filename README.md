@@ -28,7 +28,7 @@ The primary target is a Nintendo Switch Homebrew application.
 and have relevant class packages added to the `switch.json` `reflective` section to prevent classes being optimized out.
 
 ### Windows
-- Ensure Long File Paths are enabled
+- - Ensure the project directory is as close to the filesystem root as possible to avoid Windows path limits (In 2025...)
 - Install MSYS2
 - Open a mingw64 shell: `C:\msys64\msys2_shell.cmd -mingw64`
 - Install dependencies: `pacman -S gcc git rsync texinfo mingw-w64-x86_64-cmake mingw-w64-x86_64-zziplib mingw-w64-x86_64-glew mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-freetype mingw-w64-x86_64-bullet`
