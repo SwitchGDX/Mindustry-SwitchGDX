@@ -20,8 +20,8 @@ configurations {
 }
 
 dependencies {
-    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.0"
-//    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.0-dev"
+    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.2"
+//    transpiler "com.thelogicmaster.clearwing-vm:transpiler:3.0.2-dev"
 }
 
 task transpile(dependsOn: 'build') {

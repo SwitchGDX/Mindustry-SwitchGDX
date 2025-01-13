@@ -753,6 +753,7 @@ void M_arc_backend_switchgdx_SwitchInput_getTextInput_arc_Input$TextInput(jconte
     if (rc)
         goto failed;
 #elif defined(__WINRT__)
+    char result[1]{};
     goto failed;
 #else
     auto result = tinyfd_inputBox(title, message, text);

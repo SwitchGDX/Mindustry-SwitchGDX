@@ -19,7 +19,7 @@ find_package(CURL REQUIRED)
 find_package(ZZip REQUIRED)
 find_package(FFI REQUIRED)
 
-add_definitions(-DNOJNI -DWITH_SDL2_STATIC)
+add_definitions(-DNOJNI -DWITH_SDL2_STATIC -DASMJIT_STATIC)
 
 file(GLOB_RECURSE SRCS src/*.cpp src/*.c)
 include_directories(src src/soloud)
