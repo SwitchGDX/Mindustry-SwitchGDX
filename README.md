@@ -28,6 +28,7 @@ The primary target is a Nintendo Switch Homebrew application.
 and have relevant class packages added to the `switch.json` `reflective` section to prevent classes being optimized out.
 
 ### Windows
+- - Ensure the project directory is as close to the filesystem root as possible to avoid Windows path limits (In 2025...)
 - Install MSYS2
 - Open a mingw64 shell: `C:\msys64\msys2_shell.cmd -mingw64`
 - Install dependencies: `pacman -S gcc git rsync texinfo mingw-w64-x86_64-cmake mingw-w64-x86_64-zziplib mingw-w64-x86_64-glew mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-freetype mingw-w64-x86_64-bullet`
@@ -48,10 +49,9 @@ and have relevant class packages added to the `switch.json` `reflective` section
 - The `Deploy` task uses NXLink to deploy to a Switch running the Homebrew Launcher
 
 ### UWP
-- Gets in-game but has awful load times and performance, plus no controller support, so probably not useful
 - Install CMake for Windows
 - Install Visual Studio 2022 and C++/UWP support (`Desktop development with C++`, `Windows application development`)
-- Run twice for DLLs to properly be copied for some reason
+- Run twice (Rebuild) for DLLs and assets to properly be copied for some reason
 
 ### LibFFI
 This is a library that has to be compiled and installed manually for Switch. Run this for Linux normally and on Windows under MSYS2. Ensure that the working directory doesn't contain any spaces.
